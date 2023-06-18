@@ -2,17 +2,34 @@ package ml.docilealligator.infinityforreddit.utils;
 
 import android.util.Base64;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
+import ml.docilealligator.infinityforreddit.BuildConfig;
+import ml.docilealligator.infinityforreddit.R;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+
 
 /**
  * Created by alex on 2/23/18.
  */
 
 public class APIUtils {
+
+
+    private static final String SECRETS_CLASS = BuildConfig.SECRET_PROVIDER;
+    private static final ISecrets SECRET_PROVIDER;
+
+    static {
+        try {
+            SECRET_PROVIDER = (ISecrets) Class.forName(SECRETS_CLASS).newInstance();
+        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static final String OAUTH_URL = "https://www.reddit.com/api/v1/authorize.compact";
     public static final String OAUTH_API_BASE_URI = "https://oauth.reddit.com";
     public static final String API_BASE_URI = "https://www.reddit.com";
@@ -28,7 +45,9 @@ public class APIUtils {
 
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String CLIENT_SECRET_KEY = "client_secret";
-    public static final String CLIENT_ID = "NOe2iKrPPzwscA";
+
+    public static final int INDEX_CLIENT_ID = 0;
+    public static final String CLIENT_ID = SECRET_PROVIDER.APP_CLIENT_ID();
     public static final String IMGUR_CLIENT_ID = "Client-ID cc671794e0ab397";
     public static final String REDGIFS_CLIENT_ID = "1828d0bcc93-15ac-bde6-0005-d2ecbe8daab3";
     public static final String REDGIFS_CLIENT_SECRET = "TJBlw7jRXW65NAGgFBtgZHu97WlzRXHYybK81sZ9dLM=";
@@ -47,7 +66,7 @@ public class APIUtils {
     public static final String AUTHORIZATION_KEY = "Authorization";
     public static final String AUTHORIZATION_BASE = "bearer ";
     public static final String USER_AGENT_KEY = "User-Agent";
-    public static final String USER_AGENT = "android:ml.docilealligator.infinityforreddit:v5.3.0 (by /u/Hostilenemy)";
+    public static final String USER_AGENT = SECRET_PROVIDER.APP_USER_AGENT();
 
     public static final String GRANT_TYPE_KEY = "grant_type";
     public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
